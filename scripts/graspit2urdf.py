@@ -4,16 +4,18 @@ Converts a graspit model to URDF
 from lxml import etree as ET
 import os.path as osp
 import numpy as np
-from tf import transformations as trans
+#from tf import transformations as trans
+import transformations as trans
 import sympy
 import argparse
+import pdb
 
 def eval_exp(s):
   expr = sympy.sympify(s)
   var = list(expr.free_symbols)[0]
   coeff = float(expr.coeff(var))
   const = float(expr.subs(var, 0))
-  return const, coeff
+  return const, coeff, int(var.name[1])
 
 
 def T2xyzrpy(T):
@@ -49,9 +51,10 @@ def convert(input_filename, data_dir, output_dir):
   hand.append(link)
   hand.append(joint)
 
-  def convert_link(g_link):
+  def convert_link(g_link, link_name_prefix=""):
     info_filename = g_link.text
-    link_name = info_filename.split('.')[0]
+    raw_link_name = info_filename.split('.')[0]
+    link_name = link_name_prefix + raw_link_name
     link_names = [link_name]
     link = ET.Element('link', attrib={'name': link_name})
 
@@ -64,21 +67,21 @@ def convert(input_filename, data_dir, output_dir):
       ET.SubElement(v, 'origin',
           attrib={'xyz': '{:.8f} {:.8f} {:.8f}'.format(ox, oy, oz)})
     g = ET.SubElement(v, 'geometry')
-    mesh_filename = osp.join(data_dir, '{:s}.stl'.format(link_name))
+    mesh_filename = osp.join(data_dir, '{:s}.stl'.format(raw_link_name))
     mesh_filename = 'file://{:s}'.format(osp.abspath(mesh_filename))
     scale_str = (' '.join(['{:.8f}']*3)).format(1/scale, 1/scale, 1/scale)
     ET.SubElement(g, 'mesh',
         attrib={'filename': mesh_filename, 'scale': scale_str})
-    
+
     # inertial
     gg_link = ET.parse(osp.join(graspit_data_dir, info_filename)).getroot()
     i = ET.SubElement(link, 'inertial')
-    
+
     mass = float(gg_link.find('mass').text)
     mass = '{:.8f}'.format(mass / 1000.0)  # convert from grams to kg
     ET.SubElement(i, 'mass', attrib={'value': mass})
-    
-    inertial_filename = osp.join(data_dir, '{:s}.txt'.format(link_name))
+
+    inertial_filename = osp.join(data_dir, '{:s}.txt'.format(raw_link_name))
     inertia_tensor = np.genfromtxt(inertial_filename, skip_footer=1)
     # http://gazebosim.org/tutorials?tut=inertia
     inertia_tensor /= (scale**5)
@@ -87,7 +90,7 @@ def convert(input_filename, data_dir, output_dir):
     inertia_comps = ['ixx', 'ixy', 'ixz', 'iyy', 'iyz', 'izz']
     ET.SubElement(i, 'inertia',
         attrib={k: '{:.4e}'.format(v) for k,v in zip(inertia_comps, inertia_tensor)})
-    
+
     com = np.genfromtxt(inertial_filename, skip_header=1)
     com /= scale
     com = (' '.join(['{:.8f}']*3)).format(*com)
@@ -100,9 +103,9 @@ def convert(input_filename, data_dir, output_dir):
       link_name = '{:s}_0'.format(link_name)
       ET.SubElement(hand, 'link', attrib={'name': link_name})
       link_names.insert(0, link_name)
-    
+
     return link_names
-    
+
   def add_dh_links_joints(dh_a, dh_d, dh_alpha, dh_theta, start_link_name,
         end_link_name):
     tx = dh_a / scale
@@ -141,12 +144,15 @@ def convert(input_filename, data_dir, output_dir):
   root_link_name = convert_link(g_hand.find('palm'))[0]
 
   chain_idx = 0
-  dof_idx = 0
+  #dof_idx = 0
   for chain in g_hand.findall('chain'):
 
+    link_name_prefix = "chain{0}".format(chain_idx)
     link_names = [root_link_name]
     for link in chain.findall('link'):
-      link_names.extend(convert_link(link))
+      link_names.extend(convert_link(link, link_name_prefix))
+    #link_name_prefix = "chain{0}".format(chain_idx)
+    #link_names = [link_name_prefix + n for n in link_names]
 
     joint_idx = 1
     for joint in chain.findall('joint'):
@@ -161,16 +167,18 @@ def convert(input_filename, data_dir, output_dir):
           sep=' ') / scale
         rx = ry = rz = 0
         try:
-          angle, axis = init_T.find('rotation').text.split(' ')
-          angle = np.deg2rad(float(angle))
-          if axis.upper() == 'X':
-            rx += angle
-          elif axis.upper() == 'Y':
-            ry += angle
-          elif axis.upper() == 'Z':
-            rz += angle
-          else:
-            raise IOError('Wrong axis of rotation {:s}'.format(axis))
+          for match in init_T.findall('rotation'):
+              angle, axis = match.text.split(' ')
+              angle = np.deg2rad(float(angle))
+              if axis.upper() == 'X':
+                rx += angle
+              elif axis.upper() == 'Y':
+                ry += angle
+              elif axis.upper() == 'Z':
+                rz += angle
+              else:
+                raise IOError('Wrong axis of rotation {:s}'.format(axis))
+          print("rotation rx ry rz {0} {1} {2}".format(rx,ry,rz))
         except AttributeError:
           try:
             rotmat = np.fromstring(init_T.find('rotationMatrix').text, sep=' ')
@@ -185,14 +193,17 @@ def convert(input_filename, data_dir, output_dir):
         dh_theta = float(dh_theta)
       except ValueError:
         joint_type = 'revolute'
-        dh_theta, az = eval_exp(dh_theta)
+        print('expr in dh_theta')
+        dh_theta, az, dof_idx = eval_exp(dh_theta)
       dh_theta = np.deg2rad(dh_theta)
+      print(dh_theta)
 
       dh_alpha = joint.find('alpha').text
       try:
         dh_alpha = float(dh_alpha)
       except ValueError:
         joint_type = 'revolute'
+        print('expr in dh_alpha')
         dh_alpha, ax = eval_exp(dh_alpha)
       dh_alpha = np.deg2rad(dh_alpha)
 
@@ -201,16 +212,19 @@ def convert(input_filename, data_dir, output_dir):
         dh_d = float(dh_d)
       except ValueError:
         joint_type = 'prismatic'
+        print('expr in dh_d')
         dh_d, az = eval_exp(dh_d)
 
       dh_a = joint.find('a').text
       try:
         dh_a = float(dh_a)
       except ValueError:
+        print('expr in dh_a')
         joint_type = 'prismatic'
         dh_a, ax = eval_exp(dh_a)
-      if ax+ay+az != 1:
-        raise ValueError('1 and only 1 variable allowed per frame')
+      print("{0} {1} {2}".format(ax,ay,az))
+      #if ax+ay+az != 1:
+        #raise ValueError('1 and only 1 variable allowed per frame')
 
       link_name = '{:s}_joint'.format(link_names[joint_idx])
       link = ET.Element('link', attrib={'name': link_name})
@@ -233,13 +247,14 @@ def convert(input_filename, data_dir, output_dir):
         'effort': '{:.8f}'.format(max_effort),
         'velocity': '{:.8f}'.format(max_velocity)})
       hand.append(joint)
-      
+
       # add dummy links and fixed joints for DH parameters
       add_dh_links_joints(dh_a, dh_d, dh_alpha, dh_theta, link_name,
           link_names[joint_idx])
 
       joint_idx += 1
-      dof_idx += 1
+      chain_idx += 1
+      #dof_idx += 1 # this is now read from dh_theta expression
 
   tree = ET.ElementTree(hand)
   tree.write(output_filename, pretty_print=True, xml_declaration=True)
