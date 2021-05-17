@@ -9,14 +9,9 @@
   <link name="palm">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/palm.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/palm.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/palm.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="1.00000000"/>
       <inertia ixx="4.9683e-07" ixy="-2.1998e-11" ixz="-4.4593e-11" iyy="4.2631e-07" iyz="5.4560e-08" izz="4.2820e-07"/>
@@ -26,14 +21,9 @@
   <link name="chain0link1">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.20000000"/>
       <inertia ixx="1.0826e-08" ixy="-5.8408e-09" ixz="-2.9543e-12" iyy="2.8582e-08" iyz="-2.0556e-13" izz="3.3568e-08"/>
@@ -43,14 +33,9 @@
   <link name="chain0link2">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.7903e-09" ixy="-3.0473e-11" ixz="5.1145e-11" iyy="1.0421e-08" iyz="-2.6015e-12" izz="1.0998e-08"/>
@@ -60,23 +45,38 @@
   <link name="chain0link3">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.5768e-09" ixy="-3.7852e-10" ixz="1.7143e-12" iyy="7.9798e-09" iyz="-1.4211e-11" izz="7.4361e-09"/>
       <origin xyz="-0.02983588 0.00231056 0.00002397"/>
     </inertial>
   </link>
+  <link name="chain0link4">
+    <visual>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <inertial>
+        <mass value="1.00000000"/>
+        <inertia ixx="5.08612557e-06" ixy="5.33551641e-11" ixz="-1.88741699e-11" iyy="5.08604211e-06" iyz="1.48359078e-10" izz="5.04494848e-06"/>
+        <origin xyz="-1.326e-05 -1.326e-05 5.310e-06"/>
+      </inertial>
+    </collision>
+  </link>
   <link name="chain0link1_joint"/>
   <joint name="palm_chain0link1_joint" type="revolute">
-    <origin rpy="0.00000000 3.14159265 0.00000000" xyz="0.02500000 0.00000000 -0.00100000"/>
+    <origin rpy="0.00000000 3.14159265 0.00000000" xyz="0.2500000 0.00000000 -0.0100000"/>
     <parent link="palm"/>
     <child link="chain0link1_joint"/>
     <axis xyz="0.00000000 0.00000000 1.00000000"/>
@@ -89,7 +89,7 @@
     <child link="chain0link1_dh"/>
   </joint>
   <joint name="chain0link1_dh_chain0link1" type="fixed">
-    <origin rpy="-1.57079633 0.00000000 0.00000000" xyz="0.05000000 0.00000000 0.00000000"/>
+    <origin rpy="-1.57079633 0.00000000 0.00000000" xyz="0.5000000 0.00000000 0.00000000"/>
     <parent link="chain0link1_dh"/>
     <child link="chain0link1"/>
   </joint>
@@ -108,7 +108,7 @@
     <child link="chain0link2_dh"/>
   </joint>
   <joint name="chain0link2_dh_chain0link2" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.07000000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.7000000 0.00000000 0.00000000"/>
     <parent link="chain0link2_dh"/>
     <child link="chain0link2"/>
   </joint>
@@ -127,21 +127,21 @@
     <child link="chain0link3_dh"/>
   </joint>
   <joint name="chain0link3_dh_chain0link3" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.05500000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.5500000 0.00000000 0.00000000"/>
     <parent link="chain0link3_dh"/>
     <child link="chain0link3"/>
+  </joint>
+  <joint name="chain0link3_chain0link4" type="fixed">
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.000000 0.00000000 0.00000000"/>
+    <parent link="chain0link3"/>
+    <child link="chain0link4"/>
   </joint>
   <link name="chain3link1">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link1.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.20000000"/>
       <inertia ixx="1.0826e-08" ixy="-5.8408e-09" ixz="-2.9543e-12" iyy="2.8582e-08" iyz="-2.0556e-13" izz="3.3568e-08"/>
@@ -151,14 +151,9 @@
   <link name="chain3link2">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.7903e-09" ixy="-3.0473e-11" ixz="5.1145e-11" iyy="1.0421e-08" iyz="-2.6015e-12" izz="1.0998e-08"/>
@@ -168,23 +163,38 @@
   <link name="chain3link3">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.5768e-09" ixy="-3.7852e-10" ixz="1.7143e-12" iyy="7.9798e-09" iyz="-1.4211e-11" izz="7.4361e-09"/>
       <origin xyz="-0.02983588 0.00231056 0.00002397"/>
     </inertial>
   </link>
+  <link name="chain3link4">
+    <visual>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <inertial>
+        <mass value="1.00000000"/>
+        <inertia ixx="5.08612557e-06" ixy="5.33551641e-11" ixz="-1.88741699e-11" iyy="5.08604211e-06" iyz="1.48359078e-10" izz="5.04494848e-06"/>
+        <origin xyz="-1.326e-05 -1.326e-05 5.310e-06"/>
+      </inertial>
+    </collision>
+  </link>
   <link name="chain3link1_joint"/>
   <joint name="palm_chain3link1_joint" type="revolute">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="-0.02500000 0.00000000 -0.00100000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="-0.2500000 0.00000000 -0.0100000"/>
     <parent link="palm"/>
     <child link="chain3link1_joint"/>
     <axis xyz="0.00000000 0.00000000 1.00000000"/>
@@ -197,7 +207,7 @@
     <child link="chain3link1_dh"/>
   </joint>
   <joint name="chain3link1_dh_chain3link1" type="fixed">
-    <origin rpy="1.57079633 0.00000000 0.00000000" xyz="0.05000000 0.00000000 0.00000000"/>
+    <origin rpy="1.57079633 0.00000000 0.00000000" xyz="0.5000000 0.00000000 0.00000000"/>
     <parent link="chain3link1_dh"/>
     <child link="chain3link1"/>
   </joint>
@@ -216,7 +226,7 @@
     <child link="chain3link2_dh"/>
   </joint>
   <joint name="chain3link2_dh_chain3link2" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.07000000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.7000000 0.00000000 0.00000000"/>
     <parent link="chain3link2_dh"/>
     <child link="chain3link2"/>
   </joint>
@@ -235,21 +245,21 @@
     <child link="chain3link3_dh"/>
   </joint>
   <joint name="chain3link3_dh_chain3link3" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.05500000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.5500000 0.00000000 0.00000000"/>
     <parent link="chain3link3_dh"/>
     <child link="chain3link3"/>
+  </joint>
+  <joint name="chain3link3_chain3link4" type="fixed">
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.000000 0.00000000 0.00000000"/>
+    <parent link="chain3link3"/>
+    <child link="chain3link4"/>
   </joint>
   <link name="chain6link2">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link2.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.7903e-09" ixy="-3.0473e-11" ixz="5.1145e-11" iyy="1.0421e-08" iyz="-2.6015e-12" izz="1.0998e-08"/>
@@ -259,23 +269,38 @@
   <link name="chain6link3">
     <visual>
       <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
+        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.0100000 0.0100000 0.0100000"/>
       </geometry>
     </visual>
-    <collision>
-      <geometry>
-        <mesh filename="file:///workspaces/nimblephysics/scratch/GraspIt2URDF/data/Barrett/link3.stl" scale="0.00100000 0.00100000 0.00100000"/>
-      </geometry>
-    </collision>
     <inertial>
       <mass value="0.10000000"/>
       <inertia ixx="1.5768e-09" ixy="-3.7852e-10" ixz="1.7143e-12" iyy="7.9798e-09" iyz="-1.4211e-11" izz="7.4361e-09"/>
       <origin xyz="-0.02983588 0.00231056 0.00002397"/>
     </inertial>
   </link>
+  <link name="chain6link4">
+    <visual>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius=0.15/>
+      </geometry>
+      <inertial>
+        <mass value="1.00000000"/>
+        <inertia ixx="5.08612557e-06" ixy="5.33551641e-11" ixz="-1.88741699e-11" iyy="5.08604211e-06" iyz="1.48359078e-10" izz="5.04494848e-06"/>
+        <origin xyz="-1.326e-05 -1.326e-05 5.310e-06"/>
+      </inertial>
+    </collision>
+  </link>
   <link name="chain6link2_joint"/>
   <joint name="palm_chain6link2_joint" type="revolute">
-    <origin rpy="1.57079633 0.00000000 -1.57079633" xyz="0.00000000 -0.05000000 -0.00100000"/>
+    <origin rpy="1.57079633 0.00000000 -1.57079633" xyz="0.00000000 -0.5000000 -0.00100000"/>
     <parent link="palm"/>
     <child link="chain6link2_joint"/>
     <axis xyz="0.00000000 0.00000000 1.00000000"/>
@@ -288,7 +313,7 @@
     <child link="chain6link2_dh"/>
   </joint>
   <joint name="chain6link2_dh_chain6link2" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.07000000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.7000000 0.00000000 0.00000000"/>
     <parent link="chain6link2_dh"/>
     <child link="chain6link2"/>
   </joint>
@@ -307,8 +332,14 @@
     <child link="chain6link3_dh"/>
   </joint>
   <joint name="chain6link3_dh_chain6link3" type="fixed">
-    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.05500000 0.00000000 0.00000000"/>
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.5500000 0.00000000 0.00000000"/>
     <parent link="chain6link3_dh"/>
     <child link="chain6link3"/>
   </joint>
+  <joint name="chain6link3_chain6link4" type="fixed">
+    <origin rpy="0.00000000 0.00000000 0.00000000" xyz="0.000000 0.00000000 0.00000000"/>
+    <parent link="chain6link3"/>
+    <child link="chain6link4"/>
+  </joint>
+
 </robot>
